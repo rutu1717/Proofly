@@ -1,23 +1,109 @@
-'use client';
+"use client"
 
-import Link from "next/link";
-import { Button } from "@/components/ui/button";
-import LoginButton from "@/components/LoginLogoutButton";
+import Link from "next/link"
+import { useState } from "react"
+import { Button } from "@/components/ui/button"
+import { Menu, X } from "lucide-react"
 
 export function Navbar() {
+  const [isOpen, setIsOpen] = useState(false)
+
   return (
-    <nav className="bg-gradient-to-r from-purple-600 to-pink-600">
+    <nav className="bg-black/95 backdrop-blur-sm border-b border-gray-800 sticky top-0 z-50">
       <div className="container mx-auto px-4">
-        <div className="flex items-center justify-between h-16">
-          <Link href="/" className="text-xl text-white font-bold">
-            TestiTrack
+        <div className="flex justify-between items-center h-16">
+          {/* Logo */}
+          <Link href="/" className="flex items-center space-x-2">
+            <div className="w-8 h-8 bg-emerald-500 rounded-lg flex items-center justify-center">
+              <span className="text-black font-bold text-lg"></span>
+            </div>
+            <span className="text-white font-bold text-xl">Proofly</span>
           </Link>
 
-          <div className="flex items-center space-x-4">
-            <LoginButton />
+          {/* Desktop Navigation */}
+          <div className="hidden md:flex items-center space-x-8">
+            <Link href="/features" className="text-gray-300 hover:text-emerald-400 transition-colors">
+              Features
+            </Link>
+            <Link href="/pricing" className="text-gray-300 hover:text-emerald-400 transition-colors">
+              Pricing
+            </Link>
+            <Link href="/about" className="text-gray-300 hover:text-emerald-400 transition-colors">
+              About
+            </Link>
+            <Link href="/contact" className="text-gray-300 hover:text-emerald-400 transition-colors">
+              Contact
+            </Link>
           </div>
+
+          {/* Desktop Auth Buttons */}
+          <div className="hidden md:flex items-center space-x-4">
+            <Button variant="ghost" asChild className="text-gray-300 hover:text-white hover:bg-gray-800">
+              <Link href="/login">Sign In</Link>
+            </Button>
+            <Button asChild className="bg-emerald-500 hover:bg-emerald-400 text-black font-medium">
+              <Link href="/register">Get Started</Link>
+            </Button>
+          </div>
+
+          {/* Mobile menu button */}
+          <button className="md:hidden text-gray-300 hover:text-white" onClick={() => setIsOpen(!isOpen)}>
+            {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
+          </button>
         </div>
+
+        {/* Mobile Navigation */}
+        {isOpen && (
+          <div className="md:hidden py-4 border-t border-gray-800">
+            <div className="flex flex-col space-y-4">
+              <Link
+                href="/features"
+                className="text-gray-300 hover:text-emerald-400 transition-colors px-2 py-1"
+                onClick={() => setIsOpen(false)}
+              >
+                Features
+              </Link>
+              <Link
+                href="/pricing"
+                className="text-gray-300 hover:text-emerald-400 transition-colors px-2 py-1"
+                onClick={() => setIsOpen(false)}
+              >
+                Pricing
+              </Link>
+              <Link
+                href="/about"
+                className="text-gray-300 hover:text-emerald-400 transition-colors px-2 py-1"
+                onClick={() => setIsOpen(false)}
+              >
+                About
+              </Link>
+              <Link
+                href="/contact"
+                className="text-gray-300 hover:text-emerald-400 transition-colors px-2 py-1"
+                onClick={() => setIsOpen(false)}
+              >
+                Contact
+              </Link>
+              <div className="flex flex-col space-y-2 pt-4 border-t border-gray-800">
+                <Button
+                  variant="ghost"
+                  asChild
+                  className="text-gray-300 hover:text-white hover:bg-gray-800 justify-start"
+                >
+                  <Link href="/login" onClick={() => setIsOpen(false)}>
+                    Sign In
+                  </Link>
+                </Button>
+                <Button asChild className="bg-emerald-500 hover:bg-emerald-400 text-black font-medium">
+                  <Link href="/register" onClick={() => setIsOpen(false)}>
+                    Get Started
+                  </Link>
+                </Button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </nav>
-  );
+  )
 }
