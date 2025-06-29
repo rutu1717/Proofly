@@ -89,9 +89,9 @@ export default function TestimonialsPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ approved: true }),
       })
-      if (response.ok) {
-        setTestimonials((prev) => prev.map((t) => (t.id === testimonialId ? { ...t, approved: true } : t)))
-      }
+      // if (response.ok) {
+      //   setTestimonials((prev) => prev.map((t) => (t.id === testimonialId ? { ...t, approved: true } : t)))
+      // }
     } catch (error) {
       console.error("Error approving testimonial:", error)
     }
