@@ -1,16 +1,19 @@
+"use client"
 import type React from "react"
 import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { BarChart3, Settings, MessageSquare, LayoutDashboard, Code, PlusCircle } from "lucide-react"
 import Logout from "@/components/Logout"
+import { usePathname } from "next/navigation"
 
 export default function DashboardLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  const pathName = usePathname();
   return (
-    <div className="flex min-h-screen flex-col bg-black">
+    <div className="flex min-h-3/4 flex-col bg-black">
       <header className="sticky top-0 z-10 border-b border-gray-800 bg-gray-950">
         <div className="flex h-16 items-center px-4 sm:px-6">
           <Link
@@ -20,7 +23,7 @@ export default function DashboardLayout({
             <span className="h-6 w-6 rounded-full bg-emerald-500"></span>
             <span>TestiTrack</span>
           </Link>
-          <div className="ml-auto flex items-center gap-2">
+          <div className="ml-auto cursor-pointer flex items-center gap-2">
             <Logout />
           </div>
         </div>
@@ -32,35 +35,35 @@ export default function DashboardLayout({
               <nav className="grid items-start gap-2">
                 <Link
                   href="/dashboard"
-                  className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-300 transition-all hover:text-emerald-400 hover:bg-gray-800 bg-gray-800"
+                  className={`... ${pathName === "/dashboard" ? "bg-emerald-900/40 text-emerald-400 flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-emerald-400 hover:bg-gray-800" : "flex items-center gap-3 rounded-lg px-3 py-2 text-gray-300 transition-all hover:text-emerald-400 hover:bg-gray-800"}`}
                 >
                   <LayoutDashboard className="h-4 w-4" />
                   Dashboard
                 </Link>
                 <Link
                   href="/dashboard/testimonials"
-                  className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-300 transition-all hover:text-emerald-400 hover:bg-gray-800"
+                  className={`... ${pathName.startsWith("/dashboard/testimonials") ? "bg-emerald-900/40 text-emerald-400 flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-emerald-400 hover:bg-gray-800" : "flex items-center gap-3 rounded-lg px-3 py-2 text-gray-300 transition-all hover:text-emerald-400 hover:bg-gray-800"}`}
                 >
                   <MessageSquare className="h-4 w-4" />
                   Testimonials
                 </Link>
                 <Link
                   href="/dashboard/collection"
-                  className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-300 transition-all hover:text-emerald-400 hover:bg-gray-800"
+                  className={`... ${pathName.startsWith("/dashboard/collection") ? "bg-emerald-900/40 text-emerald-400 flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-emerald-400 hover:bg-gray-800" : "flex items-center gap-3 rounded-lg px-3 py-2 text-gray-300 transition-all hover:text-emerald-400 hover:bg-gray-800"}`}
                 >
                   <PlusCircle className="h-4 w-4" />
                   Collection Pages
                 </Link>
                 <Link
                   href="/dashboard/integrations"
-                  className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-300 transition-all hover:text-emerald-400 hover:bg-gray-800"
+                  className={`... ${pathName.startsWith("/dashboard/integrations") ? "bg-emerald-900/40 text-emerald-400 flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-emerald-400 hover:bg-gray-800" : "flex items-center gap-3 rounded-lg px-3 py-2 text-gray-300 transition-all hover:text-emerald-400 hover:bg-gray-800"}`}
                 >
                   <Code className="h-4 w-4" />
                   Integrations
                 </Link>
                 <Link
                   href="/dashboard/analytics"
-                  className="flex items-center gap-3 rounded-lg px-3 py-2 text-gray-300 transition-all hover:text-emerald-400 hover:bg-gray-800"
+                  className={`... ${pathName.startsWith("/dashboard/analytics") ? "bg-emerald-900/40 text-emerald-400 flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-emerald-400 hover:bg-gray-800" : "flex items-center gap-3 rounded-lg px-3 py-2 text-gray-300 transition-all hover:text-emerald-400 hover:bg-gray-800"}`}
                 >
                   <BarChart3 className="h-4 w-4" />
                   Analytics

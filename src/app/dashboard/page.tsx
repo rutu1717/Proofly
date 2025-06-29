@@ -36,7 +36,7 @@ export default function DashboardPage() {
   }, [])
 
   return (
-    <div className="min-h-screen bg-black text-white">
+    <div className="min-h-1/2 bg-black text-white ">
       <div className="flex-1 space-y-6 p-6">
         <div className="flex items-center justify-between">
           <h1 className="text-3xl font-bold tracking-tight text-white">Dashboard</h1>

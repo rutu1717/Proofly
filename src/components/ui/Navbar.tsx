@@ -19,23 +19,6 @@ export function Navbar() {
             </div>
             <span className="text-white font-bold text-xl">Proofly</span>
           </Link>
-
-          {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-8">
-            <Link href="/features" className="text-gray-300 hover:text-emerald-400 transition-colors">
-              Features
-            </Link>
-            <Link href="/pricing" className="text-gray-300 hover:text-emerald-400 transition-colors">
-              Pricing
-            </Link>
-            <Link href="/about" className="text-gray-300 hover:text-emerald-400 transition-colors">
-              About
-            </Link>
-            <Link href="/contact" className="text-gray-300 hover:text-emerald-400 transition-colors">
-              Contact
-            </Link>
-          </div>
-
           {/* Desktop Auth Buttons */}
           <div className="hidden md:flex items-center space-x-4">
             <Button variant="ghost" asChild className="text-gray-300 hover:text-white hover:bg-gray-800">
@@ -56,34 +39,7 @@ export function Navbar() {
         {isOpen && (
           <div className="md:hidden py-4 border-t border-gray-800">
             <div className="flex flex-col space-y-4">
-              <Link
-                href="/features"
-                className="text-gray-300 hover:text-emerald-400 transition-colors px-2 py-1"
-                onClick={() => setIsOpen(false)}
-              >
-                Features
-              </Link>
-              <Link
-                href="/pricing"
-                className="text-gray-300 hover:text-emerald-400 transition-colors px-2 py-1"
-                onClick={() => setIsOpen(false)}
-              >
-                Pricing
-              </Link>
-              <Link
-                href="/about"
-                className="text-gray-300 hover:text-emerald-400 transition-colors px-2 py-1"
-                onClick={() => setIsOpen(false)}
-              >
-                About
-              </Link>
-              <Link
-                href="/contact"
-                className="text-gray-300 hover:text-emerald-400 transition-colors px-2 py-1"
-                onClick={() => setIsOpen(false)}
-              >
-                Contact
-              </Link>
+             
               <div className="flex flex-col space-y-2 pt-4 border-t border-gray-800">
                 <Button
                   variant="ghost"

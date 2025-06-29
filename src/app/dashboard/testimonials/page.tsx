@@ -1,185 +1,299 @@
+"use client"
+
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
-import {
-  Filter,
-  Download,
-  Search,
-  Star,
-  Edit,
-  Trash2,
-  ThumbsUp,
-  MessageSquare,
-  CheckCircle,
-  XCircle,
-} from "lucide-react"
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { Filter, Download, Search, Star, Edit, Trash2, CheckCircle, XCircle, MessageSquare } from "lucide-react"
+
+type Space = {
+  id: string
+  name: string
+  slug: string
+}
+
+type Testimonial = {
+  id: string
+  name: string
+  email: string
+  company?: string
+  rating: number
+  content: string
+  positon:string
+  createdAt: string
+  spaceId: string
+  approved:string
+}
 
 export default function TestimonialsPage() {
-  return (
-    <div className="flex-1 space-y-6 p-8">
-      <div className="flex items-center justify-between">
-        <h1 className="text-3xl font-bold tracking-tight">Testimonials</h1>
-        <Button>Request New Testimonials</Button>
-      </div>
+  const [spaces, setSpaces] = useState<Space[]>([])
+  const [testimonials, setTestimonials] = useState<Testimonial[]>([])
+  const [selectedSpace, setSelectedSpace] = useState<string>("")
+  const [searchQuery, setSearchQuery] = useState("")
+  const [loading, setLoading] = useState(true)
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Manage Testimonials</CardTitle>
-          <CardDescription>View, approve, and organize all your customer testimonials</CardDescription>
-          <div className="flex flex-col sm:flex-row gap-4 mt-4">
-            <div className="relative flex-1">
-              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-              <Input type="search" placeholder="Search testimonials..." className="pl-8" />
-            </div>
-            <div className="flex gap-2">
-              <Button variant="outline" size="sm">
-                <Filter className="mr-2 h-4 w-4" />
-                Filter
-              </Button>
-              <Button variant="outline" size="sm">
-                <Download className="mr-2 h-4 w-4" />
-                Export
-              </Button>
-            </div>
-          </div>
-        </CardHeader>
-        <CardContent>
-          <Tabs defaultValue="all">
-            <TabsList>
-              <TabsTrigger value="all">All</TabsTrigger>
-              <TabsTrigger value="pending">Pending</TabsTrigger>
-              <TabsTrigger value="approved">Approved</TabsTrigger>
-              <TabsTrigger value="featured">Featured</TabsTrigger>
-            </TabsList>
-            <TabsContent value="all" className="space-y-4 mt-4">
-              {/* Sample Testimonials */}
-              {[
-                {
-                  id: 1,
-                  name: "John Doe",
-                  position: "CEO at Example Company",
-                  rating: 5,
-                  content:
-                    "TestiTrack has completely transformed how we collect and showcase customer testimonials. The platform is intuitive, and the widgets look great on our website. Our conversion rate has increased by 15% since implementing TestiTrack!",
-                  tags: ["Product", "Website"],
-                  verified: true,
-                  status: "approved",
-                },
-                {
-                  id: 2,
-                  name: "Sarah Johnson",
-                  position: "Marketing Director at Tech Solutions",
-                  rating: 4,
-                  content:
-                    "We've been using TestiTrack for 3 months now and it's been a game-changer for our marketing efforts. The sentiment analysis helps us understand what customers love most about our products.",
-                  tags: ["Marketing", "Analytics"],
-                  verified: true,
-                  status: "approved",
-                },
-                {
-                  id: 3,
-                  name: "Michael Chen",
-                  position: "E-commerce Manager",
-                  rating: 5,
-                  content:
-                    "The video testimonial feature is incredible! Our customers love being able to share their experiences in a more personal way, and it's helped us build much stronger social proof.",
-                  tags: ["Video", "Social Proof"],
-                  verified: false,
-                  status: "pending",
-                },
-              ].map((testimonial) => (
-                <div key={testimonial.id} className="border rounded-lg p-4">
-                  <div className="flex justify-between items-start mb-2">
-                    <div>
-                      <div className="font-medium">{testimonial.name}</div>
-                      <div className="text-sm text-muted-foreground">{testimonial.position}</div>
-                    </div>
-                    <div className="flex items-center">
-                      {Array(5)
-                        .fill(0)
-                        .map((_, j) => (
-                          <Star
-                            key={j}
-                            className={`h-4 w-4 ${j < testimonial.rating ? "text-yellow-400" : "text-gray-300"}`}
-                            fill={j < testimonial.rating ? "currentColor" : "none"}
-                          />
-                        ))}
-                    </div>
-                  </div>
-                  <p className="text-sm mb-3">{testimonial.content}</p>
-                  <div className="flex flex-wrap gap-2 mb-3">
-                    {testimonial.tags.map((tag) => (
-                      <Badge key={tag} variant="outline">
-                        {tag}
-                      </Badge>
+  // Fetch spaces on component mount
+  useEffect(() => {
+    async function fetchSpaces() {
+      try {
+        const response = await fetch("/api/spaces")
+        if (response.ok) {
+          const data = await response.json()
+          setSpaces(data)
+          if (data.length > 0) {
+            setSelectedSpace(data[0].id) // Select first space by default
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching spaces:", error)
+      }
+    }
+    fetchSpaces()
+  }, [])
+
+  // Fetch testimonials when space changes
+  useEffect(() => {
+    async function fetchTestimonials() {
+      if (!selectedSpace) return
+
+      setLoading(true)
+      try {
+        const response = await fetch(`/api/testimonials?spaceId=${selectedSpace}`)
+        if (response.ok) {
+          const data = await response.json()
+          setTestimonials(data)
+        }
+      } catch (error) {
+        console.error("Error fetching testimonials:", error)
+      } finally {
+        setLoading(false)
+      }
+    }
+    fetchTestimonials()
+  }, [selectedSpace])
+
+  // Filter testimonials based on search
+  const filteredTestimonials = testimonials.filter(
+    (testimonial) =>
+      testimonial.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      testimonial.content.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      testimonial.company?.toLowerCase().includes(searchQuery.toLowerCase()),
+  )
+
+  const handleApprove = async (testimonialId: string) => {
+    try {
+      const response = await fetch(`/api/testimonials/${testimonialId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ approved: true }),
+      })
+      if (response.ok) {
+        setTestimonials((prev) => prev.map((t) => (t.id === testimonialId ? { ...t, approved: true } : t)))
+      }
+    } catch (error) {
+      console.error("Error approving testimonial:", error)
+    }
+  }
+
+  const handleReject = async (testimonialId: string) => {
+    try {
+      const response = await fetch(`/api/testimonials/${testimonialId}`, {
+        method: "DELETE",
+      })
+      if (response.ok) {
+        setTestimonials((prev) => prev.filter((t) => t.id !== testimonialId))
+      }
+    } catch (error) {
+      console.error("Error rejecting testimonial:", error)
+    }
+  }
+
+  const selectedSpaceName = spaces.find((space) => space.id === selectedSpace)?.name || "Select Space"
+
+  return (
+    <div className="min-h-screen bg-black text-white">
+      <div className="flex-1 space-y-6 p-8">
+        <div className="flex items-center justify-between">
+          <h1 className="text-3xl font-bold tracking-tight text-white">Testimonials</h1>
+          <Button className="bg-emerald-500 hover:bg-emerald-400 text-black font-semibold">
+            Request New Testimonials
+          </Button>
+        </div>
+
+        <Card className="bg-gray-900 border-gray-800">
+          <CardHeader>
+            <CardTitle className="text-white">Manage Testimonials</CardTitle>
+            <CardDescription className="text-gray-400">
+              View, approve, and organize all your customer testimonials
+            </CardDescription>
+
+            {/* Space Selector and Search */}
+            <div className="flex flex-col sm:flex-row gap-4 mt-6">
+              <div className="flex-1">
+                <label className="block text-sm font-medium text-gray-300 mb-2">Select Space</label>
+                <Select value={selectedSpace} onValueChange={setSelectedSpace}>
+                  <SelectTrigger className="bg-gray-800 border-gray-700 text-white">
+                    <SelectValue placeholder="Choose a space" />
+                  </SelectTrigger>
+                  <SelectContent className="bg-gray-800 border-gray-700">
+                    {spaces.map((space) => (
+                      <SelectItem key={space.id} value={space.id} className="text-white hover:bg-gray-700">
+                        {space.name}
+                      </SelectItem>
                     ))}
-                    {testimonial.verified && (
-                      <Badge className="bg-green-100 text-green-800 hover:bg-green-100">Verified Purchase</Badge>
-                    )}
-                    {testimonial.status === "pending" && (
-                      <Badge className="bg-yellow-100 text-yellow-800 hover:bg-yellow-100">Pending Review</Badge>
-                    )}
-                  </div>
-                  <div className="flex gap-2 justify-end">
-                    {testimonial.status === "pending" ? (
-                      <>
-                        <Button size="sm" variant="outline" className="h-8 text-green-600">
-                          <CheckCircle className="mr-1 h-4 w-4" /> Approve
-                        </Button>
-                        <Button size="sm" variant="outline" className="h-8 text-red-600">
-                          <XCircle className="mr-1 h-4 w-4" /> Reject
-                        </Button>
-                      </>
-                    ) : (
-                      <>
-                        <Button size="sm" variant="outline" className="h-8">
-                          <ThumbsUp className="mr-1 h-4 w-4" /> Feature
-                        </Button>
-                        <Button size="sm" variant="outline" className="h-8">
-                          <Edit className="mr-1 h-4 w-4" /> Edit
-                        </Button>
-                        <Button size="sm" variant="outline" className="h-8 text-red-600">
-                          <Trash2 className="mr-1 h-4 w-4" /> Delete
-                        </Button>
-                      </>
-                    )}
-                  </div>
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div className="flex-1">
+                <label className="block text-sm font-medium text-gray-300 mb-2">Search</label>
+                <div className="relative">
+                  <Search className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
+                  <Input
+                    type="search"
+                    placeholder="Search testimonials..."
+                    className="pl-10 bg-gray-800 border-gray-700 text-white placeholder-gray-500"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                  />
                 </div>
-              ))}
-            </TabsContent>
-            <TabsContent value="pending">
-              <div className="p-8 text-center">
-                <MessageSquare className="mx-auto h-12 w-12 text-muted-foreground opacity-50" />
-                <h3 className="mt-4 text-lg font-medium">No pending testimonials</h3>
-                <p className="text-sm text-muted-foreground">All testimonials have been reviewed. Great job!</p>
               </div>
-            </TabsContent>
-            <TabsContent value="approved">
-              <div className="p-8 text-center">
-                <CheckCircle className="mx-auto h-12 w-12 text-muted-foreground opacity-50" />
-                <h3 className="mt-4 text-lg font-medium">Switch to the "All" tab</h3>
-                <p className="text-sm text-muted-foreground">
-                  To see all approved testimonials, please switch to the "All" tab
-                </p>
-              </div>
-            </TabsContent>
-            <TabsContent value="featured">
-              <div className="p-8 text-center">
-                <Star className="mx-auto h-12 w-12 text-muted-foreground opacity-50" />
-                <h3 className="mt-4 text-lg font-medium">No featured testimonials</h3>
-                <p className="text-sm text-muted-foreground">
-                  Feature your best testimonials to highlight them in widgets
-                </p>
-                <Button className="mt-4" variant="outline">
-                  Learn how to feature testimonials
+
+              <div className="flex gap-2 items-end">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="bg-transparent border-gray-700 text-gray-300 hover:bg-gray-800"
+                >
+                  <Filter className="mr-2 h-4 w-4" />
+                  Filter
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="bg-transparent border-gray-700 text-gray-300 hover:bg-gray-800"
+                >
+                  <Download className="mr-2 h-4 w-4" />
+                  Export
                 </Button>
               </div>
-            </TabsContent>
-          </Tabs>
-        </CardContent>
-      </Card>
+            </div>
+          </CardHeader>
+
+          <CardContent>
+            {loading ? (
+              <div className="flex items-center justify-center py-12">
+                <div className="w-8 h-8 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin"></div>
+                <span className="ml-3 text-gray-400">Loading testimonials...</span>
+              </div>
+            ) : filteredTestimonials.length === 0 ? (
+              <div className="text-center py-12">
+                <MessageSquare className="mx-auto h-16 w-16 text-gray-600 mb-4" />
+                <h3 className="text-xl font-medium text-white mb-2">No testimonials found</h3>
+                <p className="text-gray-400">
+                  {selectedSpace
+                    ? "This space doesn't have any testimonials yet."
+                    : "Please select a space to view testimonials."}
+                </p>
+              </div>
+            ) : (
+              <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-1">
+                {filteredTestimonials.map((Testimonial) => (
+                  <Card
+                    key={Testimonial.id}
+                    className="bg-gray-800 border-gray-700 hover:border-emerald-500/50 transition-all duration-300"
+                  >
+                    <CardContent className="p-6">
+                      {/* Header with name and rating */}
+                      <div className="flex justify-between items-start mb-4">
+                        <div>
+                          <h3 className="font-semibold text-white text-lg">{Testimonial.name}</h3>
+                          {Testimonial.company && <p className="text-gray-400 text-sm">{Testimonial.company}</p>}
+                          <p className="text-gray-500 text-xs">{Testimonial.email}</p>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          {Array(5)
+                            .fill(0)
+                            .map((_, i) => (
+                              <Star
+                                key={i}
+                                className={`h-5 w-5 ${
+                                  i < Testimonial.rating ? "text-emerald-400 fill-emerald-400" : "text-gray-600"
+                                }`}
+                              />
+                            ))}
+                        </div>
+                      </div>
+
+                      {/* Testimonial content */}
+                      <p className="text-gray-300 mb-4 leading-relaxed">{Testimonial.content}</p>
+
+                      {/* Status and actions */}
+                      <div className="flex justify-between items-center">
+                        <div className="flex gap-2">
+                          {Testimonial.approved ? (
+                            <Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30">Approved</Badge>
+                          ) : (
+                            <Badge className="bg-yellow-500/20 text-yellow-400 border-yellow-500/30">
+                              Pending Review
+                            </Badge>
+                          )}
+                        </div>
+
+                        <div className="flex gap-2">
+                          {!Testimonial.approved ? (
+                            <>
+                              <Button
+                                size="sm"
+                                onClick={() => handleApprove(Testimonial.id)}
+                                className="bg-emerald-500 hover:bg-emerald-400 text-black h-8"
+                              >
+                                <CheckCircle className="mr-1 h-4 w-4" />
+                                Approve
+                              </Button>
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => handleReject(Testimonial.id)}
+                                className="border-red-500 text-red-400 hover:bg-red-500/10 h-8"
+                              >
+                                <XCircle className="mr-1 h-4 w-4" />
+                                Reject
+                              </Button>
+                            </>
+                          ) : (
+                            <>
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                className="bg-transparent border-gray-600 text-gray-300 hover:bg-gray-700 h-8"
+                              >
+                                <Edit className="mr-1 h-4 w-4" />
+                                Edit
+                              </Button>
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                onClick={() => handleReject(Testimonial.id)}
+                                className="border-red-500 text-red-400 hover:bg-red-500/10 h-8"
+                              >
+                                <Trash2 className="mr-1 h-4 w-4" />
+                                Delete
+                              </Button>
+                            </>
+                          )}
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                ))}
+              </div>
+            )}
+          </CardContent>
+        </Card>
+      </div>
     </div>
   )
 }

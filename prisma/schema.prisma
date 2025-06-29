@@ -13,5 +13,18 @@
   header      String
   description String?
   slug        String @unique
+  testimonials Testimonial[]
+  createdAt   DateTime @default(now())
+}
+model Testimonial {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  name        String
+  email       String
+  company     String?
+  position    String?
+  rating      Int
+  content     String
+  spaceId     String   @db.ObjectId
+  space       Space    @relation(fields: [spaceId], references: [id], onDelete: Cascade)
   createdAt   DateTime @default(now())
 }

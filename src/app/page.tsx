@@ -43,7 +43,7 @@ export default function Home() {
                 asChild
                 size="lg"
                 variant="outline"
-                className="border-emerald-500 text-emerald-400 hover:bg-emerald-500/10 bg-transparent"
+                className="border-emerald-500 text-emerald-400 bg-transparent hover:border-emerald-500 hover:text-emerald-400 hover:bg-transparent"
               >
                 <Link href="/dashboard">Go to Dashboard</Link>
               </Button>
@@ -181,6 +181,7 @@ export default function Home() {
 interface FeatureCardProps {
   icon: ReactElement
   title: string
+  
   description: string
 }
 
