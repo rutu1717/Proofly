@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Filter, Download, Search, Star, Edit, Trash2, CheckCircle, XCircle, MessageSquare } from "lucide-react"
-
+ 
 type Space = {
   id: string
   name: string
@@ -205,7 +205,7 @@ export default function TestimonialsPage() {
                     key={Testimonial.id}
                     className="bg-gray-800 border-gray-700 hover:border-emerald-500/50 transition-all duration-300"
                   >
-                    <CardContent className="p-6">
+                    <CardContent className="p-5">
                       {/* Header with name and rating */}
                       <div className="flex justify-between items-start mb-4">
                         <div>
@@ -228,8 +228,7 @@ export default function TestimonialsPage() {
                       </div>
 
                       {/* Testimonial content */}
-                      <p className="text-gray-300 mb-4 leading-relaxed">{Testimonial.content}</p>
-
+                      <p className="text-gray-300 mb-4 leading-relaxed break-words">{Testimonial.content}</p>
                       {/* Status and actions */}
                       <div className="flex justify-between items-center">
                         <div className="flex gap-2">

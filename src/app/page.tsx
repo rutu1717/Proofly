@@ -7,32 +7,48 @@ import { Button } from "@/components/ui/button"
 import { ArrowRight, Star, MessageSquare, BarChart3, Code } from "lucide-react"
 import { Navbar } from "@/components/ui/Navbar"
 import { createClient } from "@/utils/supabase/client"
-
+import { useRouter } from "next/navigation"
 export default function Home() {
   const [user, setUser] = useState<any>(null)
   const supabase = createClient()
-
+  const [isLoading, setIsLoading] = useState(true)
+  const router = useRouter()
   useEffect(() => {
+    
     const fetchUser = async () => {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser()
-      setUser(user)
+      try {
+        const {
+          data: { user },
+        } = await supabase.auth.getUser()
+        setUser(user)
+      } catch (error) {
+        console.error("Error fetching user:", error)
+      } finally {
+        setIsLoading(false)
+      }
     }
     fetchUser()
   }, [])
-
+  const handleLogout = async () => {
+    setUser(null)
+    try {
+      await supabase.auth.signOut()
+      
+    } catch (error) {
+      console.error("Error during logout:", error)
+    }
+  }
   return (
     <div className="flex flex-col min-h-screen bg-black">
       {/* Hero Section */}
-      <Navbar />
+      <Navbar user={user} onLogout={handleLogout} isLoading={isLoading} />
       <header className="bg-gradient-to-r from-black to-gray-900 text-white">
         <div className="container mx-auto px-4 py-24 flex flex-col items-center text-center">
           <h1 className="text-4xl md:text-6xl font-bold mb-6 text-white">
             Collect & Showcase Authentic Customer Testimonials
           </h1>
           <p className="text-xl md:text-2xl mb-8 max-w-3xl text-gray-300">
-            TestiTrack helps businesses build trust and increase conversions with verified customer testimonials
+            Proofly helps businesses build trust and increase conversions with verified customer testimonials
           </p>
           <div className="flex flex-col sm:flex-row gap-4">
             <Button asChild size="lg" className="bg-emerald-500 text-black hover:bg-emerald-400 font-semibold">
@@ -90,7 +106,7 @@ export default function Home() {
             Ready to Leverage Your Customer Testimonials?
           </h2>
           <p className="text-xl text-gray-400 mb-8 max-w-3xl mx-auto">
-            Join thousands of businesses using TestiTrack to build trust and drive conversions
+            Join thousands of businesses using Proofly to build trust and drive conversions
           </p>
           <Button asChild size="lg" className="bg-emerald-500 hover:bg-emerald-400 text-black font-semibold">
             <Link href="/signup">
@@ -105,48 +121,8 @@ export default function Home() {
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
             <div>
-              <h3 className="font-bold text-lg mb-4 text-emerald-400">TestiTrack</h3>
+              <h3 className="font-bold text-lg mb-4 text-emerald-400">Proofly</h3>
               <p className="text-gray-400">The complete testimonial management platform for growing businesses</p>
-            </div>
-            <div>
-              <h4 className="font-bold mb-4 text-white">Product</h4>
-              <ul className="space-y-2">
-                <li>
-                  <Link href="/features" className="text-gray-400 hover:text-emerald-400 transition-colors">
-                    Features
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/pricing" className="text-gray-400 hover:text-emerald-400 transition-colors">
-                    Pricing
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/integrations" className="text-gray-400 hover:text-emerald-400 transition-colors">
-                    Integrations
-                  </Link>
-                </li>
-              </ul>
-            </div>
-            <div>
-              <h4 className="font-bold mb-4 text-white">Resources</h4>
-              <ul className="space-y-2">
-                <li>
-                  <Link href="/blog" className="text-gray-400 hover:text-emerald-400 transition-colors">
-                    Blog
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/guides" className="text-gray-400 hover:text-emerald-400 transition-colors">
-                    Guides
-                  </Link>
-                </li>
-                <li>
-                  <Link href="/support" className="text-gray-400 hover:text-emerald-400 transition-colors">
-                    Support
-                  </Link>
-                </li>
-              </ul>
             </div>
             <div>
               <h4 className="font-bold mb-4 text-white">Company</h4>
@@ -170,7 +146,7 @@ export default function Home() {
             </div>
           </div>
           <div className="border-t border-gray-800 mt-12 pt-8 text-center text-gray-400">
-            <p>© {new Date().getFullYear()} TestiTrack. All rights reserved.</p>
+            <p>© {new Date().getFullYear()} Proofly. All rights reserved.</p>
           </div>
         </div>
       </footer>

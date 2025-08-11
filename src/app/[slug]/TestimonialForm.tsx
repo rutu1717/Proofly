@@ -189,13 +189,13 @@ export default function TestimonialForm({ spaceId }: TestimonialFormProps) {
               value={formData.content}
               onChange={handleInputChange}
               rows={6}
+              maxLength={500}
               className="w-full px-4 py-3 bg-gray-800 border border-gray-700 rounded-lg text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-emerald-500 transition-all resize-none"
               placeholder="Share your experience, what you liked, and how it helped you..."
               required
             />
             <p className="text-sm text-gray-500 mt-1">{formData.content.length}/500 characters</p>
           </div>
-
           {/* Submit Button */}
           <Button
             type="submit"

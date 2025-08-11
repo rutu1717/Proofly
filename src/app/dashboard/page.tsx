@@ -18,9 +18,10 @@ type space = {
 export default function DashboardPage() {
   const [open, setOpen] = useState(false)
   const [spaces, setSpaces] = useState<space[]>([])
-
+  const [loading,setLoading] = useState(true);
   useEffect(() => {
     async function getspaces() {
+      setLoading(true);
       const res = await fetch("/api/spaces", {
         method: "GET",
       })
@@ -29,7 +30,9 @@ export default function DashboardPage() {
         console.log(typeof data)
         console.log(data)
         setSpaces(data)
+        setLoading(false);
       }
+
     }
 
     getspaces()
@@ -102,7 +105,13 @@ export default function DashboardPage() {
         </div>
 
         <div className="border border-gray-800 bg-gray-950 rounded-lg shadow-sm p-6 w-full h-72 items-center justify-center gap-4">
-          {spaces.length === 0 ? (
+        {loading ? (
+              <div className="flex items-center justify-center py-12">
+                <div className="w-8 h-8 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin"></div>
+                <span className="ml-3 text-gray-400">Loading spaces...</span>
+              </div>
+            )
+          : spaces.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full gap-4">
               <div className="w-12 h-12 rounded-full bg-gray-800 flex items-center justify-center">
                 <Plus className="h-6 w-6 text-emerald-400" />

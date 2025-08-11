@@ -21,7 +21,7 @@ export default function DashboardLayout({
             className="flex items-center gap-2 font-bold text-xl text-white hover:text-emerald-400 transition-colors"
           >
             <span className="h-6 w-6 rounded-full bg-emerald-500"></span>
-            <span>TestiTrack</span>
+            <span>Proofly</span>
           </Link>
           <div className="ml-auto cursor-pointer flex items-center gap-2">
             <Logout />
