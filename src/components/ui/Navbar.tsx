@@ -14,13 +14,14 @@ interface NavbarProps {
 }
 export function Navbar({ user, onLogout, isLoading=false }: NavbarProps) {
   const [isOpen, setIsOpen] = useState(false);
- 
+  const router = useRouter();
   const handleLogout = async () => {
     await onLogout();
     setIsOpen(false);
+    router.push("/");
   };
   return (
-    <nav className="bg-black/95 backdrop-blur-sm border-b border-gray-800 sticky top-0 z-50">
+    <nav className="bg-black/95 backdrop-blur-sm sticky top-0 z-50">
       <div className="container mx-auto px-4">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
@@ -30,56 +31,38 @@ export function Navbar({ user, onLogout, isLoading=false }: NavbarProps) {
             </div>
             <span className="text-white font-bold text-xl">Proofly</span>
           </Link>
-          {/* Desktop Auth Buttons */}
-          {user ? (
+          {/* Auth Buttons - Always visible on mobile and desktop */}
+          {user && (
             <Button
               onClick={handleLogout}
               variant="outline"
               size="sm"
-              className="bg-transparent border-gray-700 text-gray-300 hover:bg-gray-800 hover:text-emerald-400 hover:border-emerald-500/50 transition-all duration-300 cursor-pointer"
+              className="flex items-center space-x-2 bg-black/80 backdrop-blur-sm border-2 border-gray-500 text-white hover:bg-gray-800 hover:text-emerald-400 hover:border-emerald-400 transition-all duration-300 cursor-pointer px-4 py-2 rounded-lg shadow-lg"
             >
-              <LogOut className="h-4 w-4 mr-2" />
-              Logout
+              <LogOut className="h-4 w-4" />
+              <span className="hidden sm:inline">Logout</span>
             </Button>
-          ) : (
-            <div className="hidden md:flex items-center space-x-4">
+          )}
+          {!user && (
+            <div className="flex items-center space-x-3">
               <Button
-                variant="ghost"
+                variant="outline"
                 asChild
-                className="text-gray-300 hover:text-white hover:bg-gray-800"
+                size="sm"
+                className="bg-black/80 backdrop-blur-sm border-2 border-gray-500 text-white hover:bg-gray-800 hover:text-emerald-400 hover:border-emerald-400 transition-all duration-300 px-4 py-2 rounded-lg shadow-lg"
               >
                 <Link href="/login">Sign In</Link>
               </Button>
+              <Button
+                asChild
+                size="sm"
+                className="bg-emerald-600 hover:bg-emerald-700 text-white border-2 border-emerald-500 shadow-lg hover:shadow-xl transition-all duration-300 rounded-lg font-medium"
+              >
+                <Link href="/signup">Sign Up</Link>
+              </Button>
             </div>
           )}
-
-          {/* Mobile menu button */}
-          <button
-            className="md:hidden text-gray-300 hover:text-white"
-            onClick={() => setIsOpen(!isOpen)}
-          >
-            {isOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
-          </button>
         </div>
-
-        {/* Mobile Navigation */}
-        {isOpen && (
-          <div className="md:hidden py-4 border-t border-gray-800">
-            <div className="flex flex-col space-y-4">
-              <div className="flex flex-col space-y-2 pt-4 border-t border-gray-800">
-                <Button
-                  variant="ghost"
-                  asChild
-                  className="text-gray-300 hover:text-white hover:bg-gray-800 justify-start"
-                >
-                  <Link href="/login" onClick={() => setIsOpen(false)}>
-                    Sign In
-                  </Link>
-                </Button>
-              </div>
-            </div>
-          </div>
-        )}
       </div>
     </nav>
   );

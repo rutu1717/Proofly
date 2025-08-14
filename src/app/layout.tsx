@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Toaster } from 'sonner'
 // These styles apply to every route in the application
 import './globals.css'
+import BackgroundFX from '@/components/BackgroundFX'
  
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -16,8 +17,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        {children}
-        <Toaster />
+        <BackgroundFX />
+        <div className="relative z-10">
+          {children}
+          <Toaster />
+        </div>
       </body>
     </html>
   )
