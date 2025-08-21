@@ -64,6 +64,7 @@ export async function signout() {
 }
 
 export async function signInWithGoogle() {
+  
   const supabase = await createClient();
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: "google",
@@ -79,6 +80,6 @@ export async function signInWithGoogle() {
     console.log(error);
     redirect("/error");
   }
-
-  redirect(data.url);
+  
+  redirect("/dashboard");
 }

@@ -45,17 +45,17 @@ export default function Home() {
       <div className="relative bg-gradient-to-b from-black/90 via-gray-900/80 to-gray-950/90 backdrop-blur-sm">
         {/* Hero Section */}
         <Navbar user={user} onLogout={handleLogout} isLoading={isLoading} />
-        <header className="text-white">
+         <header className="text-white">
           <div className="container mx-auto px-4 py-24 flex flex-col items-center text-center">
-            <h1 className="text-4xl md:text-6xl font-bold mb-6 text-white">
+            <h1 className="text-3xl scroll-m-20 md:text-6xl mb-6 font-extrabold tracking-tight text-balance">
               Collect & Showcase Authentic Customer Testimonials
             </h1>
-            <p className="text-xl md:text-2xl mb-8 max-w-3xl text-gray-300">
-              Proofly helps businesses build trust and increase conversions with verified customer testimonials
+            <p className="text-xl md:text-2xl mb-8 scroll-m-20 border-b pb-2 font-semibold tracking-tight first:mt-0">
+              Proofly helps businesses build trust and increase  <br /> conversions with verified customer testimonials
             </p>
             <div className="flex flex-col sm:flex-row gap-4">
               <Button asChild size="lg" className="bg-emerald-500 text-black hover:bg-emerald-400 font-semibold">
-                <Link href="/register">Start Free Trial</Link>
+                <Link href="/signup">Get Started</Link>
               </Button>
               {user && (
                 <Button

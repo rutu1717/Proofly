@@ -131,6 +131,21 @@ body {
   50% { background-position: 100% 50% }
   100% { background-position: 0% 50% }
 }
+@keyframes glowing-text {
+  0% {
+    text-shadow: 0 0 1px rgba(100, 255, 100, 0.1);
+  }
+  50% {
+    text-shadow: 0 0 2px rgba(100, 255, 100, 0.2);
+  }
+  100% {
+    text-shadow: 0 0 1px rgba(100, 255, 100, 0.1);
+  }
+}
+
+.glowing-text-effect {
+  animation: glowing-text 4s ease-in-out infinite;
+}
 
 .bg-grid {
   background-image:

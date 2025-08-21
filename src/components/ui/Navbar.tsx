@@ -1,23 +1,20 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { Menu, X } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { createClient } from "@/utils/supabase/client";
 import { LogOut } from "lucide-react";
-import { useEffect, useState } from "react";
+
 interface NavbarProps {
   user: any;
   onLogout: () => void;
   isLoading?: boolean;
 }
 export function Navbar({ user, onLogout, isLoading=false }: NavbarProps) {
-  const [isOpen, setIsOpen] = useState(false);
   const router = useRouter();
   const handleLogout = async () => {
     await onLogout();
-    setIsOpen(false);
     router.push("/");
   };
   return (
@@ -26,8 +23,14 @@ export function Navbar({ user, onLogout, isLoading=false }: NavbarProps) {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2">
-            <div className="w-8 h-8 bg-emerald-500 rounded-lg flex items-center justify-center">
-              <span className="text-black font-bold text-lg"></span>
+            <div>
+              <Image
+                src="/proofly-high-resolution-logo-removebg-preview.png"
+                alt="Proofly Logo"
+                width={32}
+                height={32}
+                className="mt-1"
+              />
             </div>
             <span className="text-white font-bold text-xl">Proofly</span>
           </Link>

@@ -19,6 +19,8 @@ export default function DashboardPage() {
   const [open, setOpen] = useState(false)
   const [spaces, setSpaces] = useState<space[]>([])
   const [loading,setLoading] = useState(true);
+  const [avgRating,setavgRating]=useState(0);
+  const [totalTestimonials, setTotalTestimonials] = useState(0)
   useEffect(() => {
     async function getspaces() {
       setLoading(true);
@@ -34,8 +36,34 @@ export default function DashboardPage() {
       }
 
     }
-
+    async function getTotalTestimonials(){
+      const response = await fetch("api/testimonials",{
+        method:"GET"
+      })
+      if(response.ok){
+        const data = await response.json();
+        setTotalTestimonials(data.count)
+      }
+    }
+    async function getAvgRating(){
+      const response = await fetch("api/testimonials",{
+        method:"GET"
+      })
+      if(response.ok){
+        const data = await response.json();
+        var rating = 0;
+        
+        for (const testimonial of data.testimonials){
+          rating += testimonial.rating;
+          console.log("rating is",(rating))
+        }
+        setavgRating(rating/data.count);
+        console.log(rating/data.count)
+      }
+    }
     getspaces()
+    getTotalTestimonials()
+    getAvgRating()
   }, [])
 
   return (
@@ -53,8 +81,8 @@ export default function DashboardPage() {
               <MessageSquare className="h-4 w-4 text-emerald-400" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-white">142</div>
-              <p className="text-xs text-gray-400">+22% from last month</p>
+              <div className="text-3xl font-bold text-white">{totalTestimonials}</div>
+              {/* <p className="text-xs text-gray-400">+22% from last month</p> */}
             </CardContent>
           </Card>
 
@@ -64,11 +92,11 @@ export default function DashboardPage() {
               <Star className="h-4 w-4 text-emerald-400" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-white">4.8</div>
-              <p className="text-xs text-gray-400">+0.2 from last month</p>
+              <div className="text-3xl font-bold text-white">{avgRating}</div>
+              {/* <p className="text-xs text-gray-400">+0.2 from last month</p> */}
             </CardContent>
           </Card>
-
+{/* 
           <Card className="bg-gray-900 border-gray-800 hover:border-emerald-500/50 transition-all duration-300">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium text-gray-300">Positive Sentiment</CardTitle>
@@ -78,9 +106,9 @@ export default function DashboardPage() {
               <div className="text-2xl font-bold text-white">92%</div>
               <p className="text-xs text-gray-400">+3% from last month</p>
             </CardContent>
-          </Card>
+          </Card> */}
 
-          <Card className="bg-gray-900 border-gray-800 hover:border-emerald-500/50 transition-all duration-300">
+          {/* <Card className="bg-gray-900 border-gray-800 hover:border-emerald-500/50 transition-all duration-300">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <CardTitle className="text-sm font-medium text-gray-300">Unique Customers</CardTitle>
               <Users className="h-4 w-4 text-emerald-400" />
@@ -89,7 +117,7 @@ export default function DashboardPage() {
               <div className="text-2xl font-bold text-white">138</div>
               <p className="text-xs text-gray-400">+18% from last month</p>
             </CardContent>
-          </Card>
+          </Card> */}
         </div>
       </div>
 
@@ -98,7 +126,7 @@ export default function DashboardPage() {
           <h1 className="text-3xl font-bold tracking-tight mb-6 text-white">Spaces</h1>
           <Button
             onClick={() => setOpen(true)}
-            className="cursor-pointer bg-emerald-500 hover:bg-emerald-400 text-black font-semibold hover:scale-105 transition-all duration-300"
+            className="cursor-pointer mb-4 bg-emerald-500 hover:bg-emerald-400 text-black font-semibold hover:scale-105 transition-all duration-300"
           >
             <Plus className="h-4 w-4" /> Create a New Space
           </Button>
@@ -107,9 +135,9 @@ export default function DashboardPage() {
         <div className="border border-gray-800 bg-gray-950 rounded-lg shadow-sm p-6 w-full h-72 items-center justify-center gap-4">
         {loading ? (
               <div className="flex items-center justify-center py-12">
-                <div className="w-8 h-8 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin"></div>
-                <span className="ml-3 text-gray-400">Loading spaces...</span>
-              </div>
+              <div className="w-8 h-8 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin"></div>
+              <span className="ml-3 text-gray-400">Loading spaces...</span>
+            </div>
             )
           : spaces.length === 0 ? (
             <div className="flex flex-col items-center justify-center h-full gap-4">

@@ -63,7 +63,7 @@ export default function TestimonialsPage() {
         const response = await fetch(`/api/testimonials?spaceId=${selectedSpace}`)
         if (response.ok) {
           const data = await response.json()
-          setTestimonials(data)
+          setTestimonials(data.testimonials)
         }
       } catch (error) {
         console.error("Error fetching testimonials:", error)
@@ -73,6 +73,7 @@ export default function TestimonialsPage() {
     }
     fetchTestimonials()
   }, [selectedSpace])
+
 
   // Filter testimonials based on search
   const filteredTestimonials = testimonials.filter(
