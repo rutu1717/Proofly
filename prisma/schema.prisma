@@ -22,7 +22,7 @@ model Testimonial {
   email       String
   company     String?
   position    String?
-  rating      Int
+  rating      Int @default(0)
   content     String
   spaceId     String   @db.ObjectId
   space       Space    @relation(fields: [spaceId], references: [id], onDelete: Cascade)

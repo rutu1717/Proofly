@@ -36,12 +36,15 @@ export default function DashboardPage() {
   const [avgRating, setavgRating] = useState(0);
   const [totalTestimonials, setTotalTestimonials] = useState(0);
   const handleDelete = async (spaceId: string) => {
-    const res = await fetch(`/api/spaces/spaceId=${spaceId}`, {
+    const res = await fetch(`/api/spaces?spaceId=${spaceId}`, {
       method: "DELETE",
     });
+    console.log("Request is called")
     if (res.ok) {
       const data = await res.json();
-      console.log(data);
+      console.log("Delete Data"+data);
+    }{
+      console.log("error while deleting the space");
     }
   };
   useEffect(() => {
@@ -68,21 +71,27 @@ export default function DashboardPage() {
       }
     }
     async function getAvgRating() {
-      const response = await fetch("api/testimonials", {
-        method: "GET",
-      });
-      if (response.ok) {
-        const data = await response.json();
-        var rating = 0;
+  const response = await fetch("api/testimonials", {
+    method: "GET",
+  });
 
-        for (const testimonial of data.testimonials) {
-          rating += testimonial.rating;
-          console.log("rating is", rating);
-        }
-        setavgRating(rating / data.count);
-        console.log(rating / data.count);
-      }
+  if (response.ok) {
+    const data = await response.json();
+
+    let rating = 0;
+    const testimonials = data.testimonials || [];
+    const count = testimonials.length || 0;
+
+    for (const testimonial of testimonials) {
+      rating += Number(testimonial.rating) || 0; // ensure numeric
     }
+
+    const avg = count > 0 ? rating / count : 0; // avoid division by 0
+    setavgRating(avg);
+
+    console.log("Average rating:", avg);
+  }
+}
     getspaces();
     getTotalTestimonials();
     getAvgRating();
@@ -198,9 +207,10 @@ export default function DashboardPage() {
                         <button
                           onClick={(e) => {
                             e.stopPropagation();
+                            e.preventDefault();
                             handleDelete(space.id);
                           }}
-                          className="flex-shrink-0 p-2 rounded-full bg-red-600 hover:bg-red-700 text-white transition-colors duration-200"
+                          className="flex-shrink-0 p-2 rounded-full cursor-pointer bg-red-600 hover:bg-red-700 text-white transition-colors duration-200 z-10"
                         >
                           <Trash2 size={14} />
                         </button>

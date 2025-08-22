@@ -16,6 +16,7 @@ export async function GET(){
     return NextResponse.json(spaces);
 }
 export async function DELETE(request: Request){
+    console.log("Hola amigo")
     const searchParams = new URL(request.url).searchParams;
     const id = searchParams.get("spaceId");
     if (!id) {
