@@ -35,20 +35,7 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
   const [avgRating, setavgRating] = useState(0);
   const [totalTestimonials, setTotalTestimonials] = useState(0);
-  const handleDelete = async (spaceId: string) => {
-    const res = await fetch(`/api/spaces?spaceId=${spaceId}`, {
-      method: "DELETE",
-    });
-    console.log("Request is called")
-    if (res.ok) {
-      const data = await res.json();
-      console.log("Delete Data"+data);
-    }{
-      console.log("error while deleting the space");
-    }
-  };
-  useEffect(() => {
-    async function getspaces() {
+  async function getspaces() {
       setLoading(true);
       const res = await fetch("/api/spaces", {
         method: "GET",
@@ -61,6 +48,21 @@ export default function DashboardPage() {
         setLoading(false);
       }
     }
+  const handleDelete = async (spaceId: string) => {
+    const res = await fetch(`/api/spaces?spaceId=${spaceId}`, {
+      method: "DELETE",
+    });
+    console.log("Request is called")
+    if (res.ok) {
+      const data = await res.json();
+      console.log("Delete Data"+data);
+      getspaces(); 
+    }{
+      console.log("error while deleting the space");
+    }
+  };
+  useEffect(() => {
+    
     async function getTotalTestimonials() {
       const response = await fetch("api/testimonials", {
         method: "GET",
