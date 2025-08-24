@@ -16,10 +16,8 @@ export default async function SpacePage({ params }: { params: { slug: string } }
       <div className="container mx-auto p-8 max-w-4xl">
         {/* Header Section */}
         <div className="text-center mb-12">
-          <div className="mb-6">
-            <div className="w-16 h-16 bg-emerald-500 rounded-full flex items-center justify-center mx-auto mb-4">
-              <span className="text-black font-bold text-2xl">T</span>
-            </div>
+          <div className="mb-8">
+           
             <h1 className="text-4xl md:text-4xl font-bold mb-4 text-white">{space.header}</h1>
             <p className="text-xl text-gray-300 max-w-2xl mx-auto leading-relaxed">{space.description}</p>
           </div>

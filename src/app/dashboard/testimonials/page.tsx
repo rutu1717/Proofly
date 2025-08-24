@@ -7,6 +7,8 @@ import { Input } from "@/components/ui/input"
 import { Badge } from "@/components/ui/badge"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Filter, Download, Search, Star, Edit, Trash2, CheckCircle, XCircle, MessageSquare } from "lucide-react"
+import { Dialog } from "@radix-ui/react-dialog"
+import TestimonialEmbedDialog from "./dialogspace"
  
 type Space = {
   id: string
@@ -28,6 +30,7 @@ type Testimonial = {
 }
 
 export default function TestimonialsPage() {
+  const [open, setOpen] = useState(false)
   const [spaces, setSpaces] = useState<Space[]>([])
   const [testimonials, setTestimonials] = useState<Testimonial[]>([])
   const [selectedSpace, setSelectedSpace] = useState<string>("")
@@ -184,7 +187,16 @@ export default function TestimonialsPage() {
           </CardHeader>
 
           <CardContent>
-            {loading ? (
+            {spaces.length===0 ? (
+             
+               <div className="text-center py-12">
+                <MessageSquare className="mx-auto h-16 w-16 text-gray-600 mb-4" />
+                <h3 className="text-xl font-medium text-white mb-2">No spaces found</h3>
+                <p className="text-gray-400">
+                  You don't have any spaces yet. Please create a space to start collecting testimonials.
+                </p>
+              </div>
+            ) : loading ?(
               <div className="flex items-center justify-center py-12">
                 <div className="w-8 h-8 border-2 border-emerald-500 border-t-transparent rounded-full animate-spin"></div>
                 <span className="ml-3 text-gray-400">Loading testimonials...</span>
@@ -247,11 +259,11 @@ export default function TestimonialsPage() {
                             <>
                               <Button
                                 size="sm"
-                                onClick={() => handleApprove(Testimonial.id)}
+                                onClick={()=>{setOpen(true)}}
                                 className="bg-emerald-500 hover:bg-emerald-400 text-black h-8"
                               >
                                 <CheckCircle className="mr-1 h-4 w-4" />
-                                Approve
+                                Embed
                               </Button>
                               <Button
                                 size="sm"
@@ -293,6 +305,8 @@ export default function TestimonialsPage() {
             )}
           </CardContent>
         </Card>
+        <TestimonialEmbedDialog open={open} setOpen={setOpen} embedCode="
+        ehe"/>
       </div>
     </div>
   )
