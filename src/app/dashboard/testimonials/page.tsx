@@ -34,6 +34,7 @@ export default function TestimonialsPage() {
   const [spaces, setSpaces] = useState<Space[]>([])
   const [testimonials, setTestimonials] = useState<Testimonial[]>([])
   const [selectedSpace, setSelectedSpace] = useState<string>("")
+  const [selectedTestimonialId, setSelectedTestimonialId] = useState<string>("")
   const [searchQuery, setSearchQuery] = useState("")
   const [loading, setLoading] = useState(true)
 
@@ -259,7 +260,10 @@ export default function TestimonialsPage() {
                             <>
                               <Button
                                 size="sm"
-                                onClick={()=>{setOpen(true)}}
+                                onClick={()=>{
+                                  setOpen(true)
+                                  setSelectedTestimonialId(Testimonial.id)
+                                }}
                                 className="bg-emerald-500 hover:bg-emerald-400 text-black h-8"
                               >
                                 <CheckCircle className="mr-1 h-4 w-4" />
@@ -305,8 +309,7 @@ export default function TestimonialsPage() {
             )}
           </CardContent>
         </Card>
-        <TestimonialEmbedDialog open={open} setOpen={setOpen} embedCode="
-        ehe"/>
+        <TestimonialEmbedDialog open={open} setOpen={setOpen} testimonialId={selectedTestimonialId}/>
       </div>
     </div>
   )
