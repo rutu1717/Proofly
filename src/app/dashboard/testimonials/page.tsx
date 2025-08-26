@@ -78,7 +78,24 @@ export default function TestimonialsPage() {
     fetchTestimonials()
   }, [selectedSpace])
 
-
+  const ApproveStatus = async (testimonialId: string) => {
+    try {
+      const response = await fetch(`/api/testimonials/${testimonialId}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: "APPROVED" }),
+      })
+      if (response.ok) {
+        setTestimonials((prev) =>
+          prev.map((t) =>
+            t.id === testimonialId ? { ...t, approved: "APPROVED" } : t
+          )
+        )
+      }
+    } catch (error) {
+      console.error("Error updating testimonial status:", error)
+    }
+  }
   // Filter testimonials based on search
   const filteredTestimonials = testimonials.filter(
     (testimonial) =>
@@ -87,20 +104,7 @@ export default function TestimonialsPage() {
       testimonial.company?.toLowerCase().includes(searchQuery.toLowerCase()),
   )
 
-  const handleApprove = async (testimonialId: string) => {
-    try {
-      const response = await fetch(`/api/testimonials/${testimonialId}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ approved: true }),
-      })
-      // if (response.ok) {
-      //   setTestimonials((prev) => prev.map((t) => (t.id === testimonialId ? { ...t, approved: true } : t)))
-      // }
-    } catch (error) {
-      console.error("Error approving testimonial:", error)
-    }
-  }
+  
 
   const handleReject = async (testimonialId: string) => {
     try {
@@ -261,13 +265,14 @@ export default function TestimonialsPage() {
                               <Button
                                 size="sm"
                                 onClick={()=>{
-                                  setOpen(true)
+                                  ApproveStatus(Testimonial.id);
+                                  // setOpen(true)
                                   setSelectedTestimonialId(Testimonial.id)
                                 }}
                                 className="bg-emerald-500 hover:bg-emerald-400 text-black h-8"
                               >
                                 <CheckCircle className="mr-1 h-4 w-4" />
-                                Embed
+                                Approve
                               </Button>
                               <Button
                                 size="sm"

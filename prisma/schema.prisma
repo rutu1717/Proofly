@@ -23,6 +23,7 @@ model Testimonial {
   company     String?
   position    String?
   rating      Int @default(0)
+  status      String @default("pending")
   content     String
   spaceId     String   @db.ObjectId
   space       Space    @relation(fields: [spaceId], references: [id], onDelete: Cascade)
