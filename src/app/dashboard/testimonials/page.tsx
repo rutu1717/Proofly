@@ -24,6 +24,7 @@ type Testimonial = {
   rating: number
   content: string
   positon:string
+  status: string
   createdAt: string
   spaceId: string
   approved:string
@@ -250,7 +251,7 @@ export default function TestimonialsPage() {
                       {/* Status and actions */}
                       <div className="flex justify-between items-center">
                         <div className="flex gap-2">
-                          {Testimonial.approved ? (
+                          {Testimonial.status == "APPROVED" ? (
                             <Badge className="bg-emerald-500/20 text-emerald-400 border-emerald-500/30">Approved</Badge>
                           ) : (
                             <Badge className="bg-yellow-500/20 text-yellow-400 border-yellow-500/30">
@@ -260,7 +261,7 @@ export default function TestimonialsPage() {
                         </div>
 
                         <div className="flex gap-2">
-                          {!Testimonial.approved ? (
+                          {!(Testimonial.status == "APPROVED") ? (
                             <>
                               <Button
                                 size="sm"

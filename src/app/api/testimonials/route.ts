@@ -25,20 +25,3 @@ export async function GET(request : Request){
     });
     return NextResponse.json({testimonials,count},{status:201});
 }
-export async function PATCH(request : Request){
-    const {status} = await request.json();
-    console.log("Status is"+status);
-    const {searchParams} = new URL(request.url);
-    const testimonialId = searchParams.get("testimonialId");
-    if(testimonialId){
-        const testimonial = await prisma.testimonial.update({
-            where: { id: testimonialId },
-            data: {
-              status // Will only accept 'PENDING', 'APPROVED', or 'REJECTED'
-            }
-          });
-          return NextResponse.json(testimonial,{status:201});
-    }
-    
-    return NextResponse.json({message:"Testimonial ID is required"},{status:400});
-}
